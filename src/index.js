@@ -15,10 +15,10 @@ for ( var i=0; i<9; i++) {
 sudok[i] = [];
 for ( var j=0; j<9; j++ ) {
 if ( mat[i][j] ) {
-sudok[i][j] = [mat[i][j], 'in', []];
+sudok[i][j] = [mat[i][j], '', []];
 }
 else {
-sudok[i][j] = [0, 'unknown', suggest];
+sudok[i][j] = [0, '0', suggest];
 }
 }
 }
@@ -34,20 +34,18 @@ return 1;
 }
 return 0;
 };
+
 function solve() {
 var count = 0;
 do {
-
 count = update();
 st++;
 if ( 81 < st ) {
-
 break;
 }
 } while (count);
 
 if ( !issudok() && !isFailed() ) {
-
 backtracking();
 }
 };
@@ -58,13 +56,10 @@ buf = mass(buf, colContent(3));
 buf = mass(buf, Countent(1, 3));
 for ( var i=0; i<9; i++) {
 for ( var j=0; j<9; j++) {
-if ( 'unknown' != sudok[i][j][1] ) {
-
+if ( '0' != sudok[i][j][1] ) {
 continue;
 }
-
 count += solveSingle(i, j);
-
 count += solveHiddenSingle(i, j);
 }
 }
@@ -73,12 +68,12 @@ return count;
 
 function Sl(i, j, solve) {
 sudok[i][j][0] = solve;
-sudok[i][j][1] = 'sudok';
+sudok[i][j][1] = '';
 };
 function rowContent(i) {
 var content = [];
 for ( var j=0; j<9; j++ ) {
-if ( 'unknown' != sudok[i][j][1] ) {
+if ( '0' != sudok[i][j][1] ) {
 content[content.length] = sudok[i][j][0];
 }
 }
@@ -107,12 +102,12 @@ return count;
 
 function Sl(i, j, solve) {
 sudok[i][j][0] = solve;
-sudok[i][j][1] = 'sudok';
+sudok[i][j][1] = '';
 };
 function rowContent(i) {
 var content = [];
 for ( var j=0; j<9; j++ ) {
-if ( 'unknown' != sudok[i][j][1] ) {
+if ( '0' != sudok[i][j][1] ) {
 content[content.length] = sudok[i][j][0];
 }
 }
@@ -122,7 +117,7 @@ return content;
 function colContent(j) {
 var content = [];
 for ( var i=0; i<9; i++ ) {
-if ( 'unknown' != sudok[i][j][1] ) {
+if ( '0' != sudok[i][j][1] ) {
 content[content.length] = sudok[i][j][0];
 }
 }
@@ -134,7 +129,7 @@ var n = sudok[i][j][2];
 var offset = sectOffset(i, j);
 for ( var k=0; k<3; k++ ) {
 for ( var l=0; l<3; l++ ) {
-if ( ((offset.i+k) == i && (offset.j+l) == j)|| 'unknown' != sudok[offset.i+k][offset.j+l][1] ) {
+if (  '0' != sudok[offset.i+k][offset.j+l][1] ) {
 continue;
 }
 n = mass(n, sudok[offset.i+k][offset.j+l][2]);
@@ -143,13 +138,12 @@ n = mass(n, sudok[offset.i+k][offset.j+l][2]);
 return n;
 };
 
-
 function Countent(i, j) {
 var content = [];
 var offset = sectOffset(i, j);
 for ( var k=0; k<3; k++ ) {
 for ( var l=0; l<3; l++ ) {
-if ( 'unknown' != sudok[offset.i+k][offset.j+l][1] ) {
+if ( '0' != sudok[offset.i+k][offset.j+l][1] ) {
 content[content.length] = sudok[offset.i+k][offset.j+l][0];
 }
 }
@@ -157,11 +151,10 @@ content[content.length] = sudok[offset.i+k][offset.j+l][0];
 return content;
 };
 
-
 function lessRowSuggest(i, j) {
 var n = sudok[i][j][2];
 for ( var k=0; k<9; k++ ) {
-if ( k == j || 'unknown' != sudok[i][k][1] ) {
+if ( k == j || '0' != sudok[i][k][1] ) {
 continue;
 }
 n = mass(n, sudok[i][k][2]);
@@ -169,18 +162,16 @@ n = mass(n, sudok[i][k][2]);
 return n;
 };
 
-
 function lessColSuggest(i, j) {
 var n = sudok[i][j][2];
 for ( var k=0; k<9; k++ ) {
-if ( k == i || 'unknown' != sudok[k][j][1] ) {
+if ( k == i || '0' != sudok[k][j][1] ) {
 continue;
 }
 n = mass(n, sudok[k][j][2]);
 }
 return n;
 };
-
 
 function mass (ar1, ar2) {
 var arr_diff = [];
@@ -189,7 +180,7 @@ var is_found = false;
 for ( var j=0; j<ar2.length; j++ ) {
 if ( ar1[i] == ar2[j] ) {
 is_found = true;
-break;
+
 }
 }
 if ( !is_found ) {
@@ -203,7 +194,7 @@ function issudok() {
 var is_sudok = true;
 for ( var i=0; i<9; i++) {
 for ( var j=0; j<9; j++ ) {
-if ( 'unknown' == sudok[i][j][1] ) {
+if ( '0' == sudok[i][j][1] ) {
 is_sudok = false;
 }
 }
@@ -217,7 +208,7 @@ for(var i=0,j=ar.length;i<j;i++){
 sorter[ar[i]] = ar[i];
 }
 ar = [];
-for(var i in sorter){
+for(var i=0; i<ar.length;i++){
 ar.push(i);
 }
 return ar;
@@ -226,12 +217,9 @@ return ar;
 function sectOffset(i, j) {
 return {
 j: Math.floor(j/3)*3,
-i:
-Math.floor(i/3)*3
+i:Math.floor(i/3)*3
 };
 };
-
-
 
 this.issudok = function() {
 return issudok();
@@ -240,12 +228,11 @@ function isFailed() {
 var is_failed = false;
 for ( var i=0; i<9; i++) {
 for ( var j=0; j<9; j++ ) {
-if ( 'unknown' == sudok[i][j][1] && !sudok[i][j][2].length ) {
+if ( '0' == sudok[i][j][1] && !sudok[i][j][2].length ) {
 is_failed = true;
 }
 }
 }
-
 };
 
 function backtracking() {
@@ -256,7 +243,7 @@ for ( var i=0; i<9; i++ ) {
 mat[i].length = 9;
 for ( var j=0; j<9; j++ ) {
 mat[i][j] = sudok[i][j][0];
-if ( 'unknown' == sudok[i][j][1] && (sudok[i][j][2].length < suggests_cnt || !suggests_cnt) ) {
+if ( '0' == sudok[i][j][1] && ( !suggests_cnt) ) {
 suggests_cnt = sudok[i][j][2].length;
 i_min = i;
 j_min = j;
@@ -273,7 +260,7 @@ out_val = issudok();
 
 for ( var i=0; i<9; i++ ) {
 for ( var j=0; j<9; j++ ) {
-if ( 'unknown' == sudok[i][j][1] ) {
+if ( '0' == sudok[i][j][1] ) {
 Sl(i, j, out_val[i][j][0])
 }
 }
@@ -302,3 +289,4 @@ var mass=Sudoku(matrix);
 return(mass[0]);
 
 }
+
